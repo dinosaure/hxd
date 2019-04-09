@@ -1,0 +1,5 @@
+(library
+ (name hxd_unix)
+ (modules hxd_unix)
+ (optional)
+ (libraries hxd unix))

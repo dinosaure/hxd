@@ -1,0 +1,5 @@
+(library
+ (name hxd_string)
+ (modules hxd_string)
+ (optional)
+ (libraries hxd))

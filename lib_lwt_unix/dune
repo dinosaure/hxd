@@ -1,0 +1,5 @@
+(library
+ (name hxd_lwt_unix)
+ (modules hxd_lwt_unix)
+ (optional)
+ (libraries lwt lwt.unix hxd))

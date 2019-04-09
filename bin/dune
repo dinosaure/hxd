@@ -1,0 +1,5 @@
+(executable
+ (name xxd)
+ (public_name hxd.xxd)
+ (modules xxd)
+ (libraries fmt hxd fpath angstrom rresult cmdliner hxd_unix))

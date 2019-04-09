@@ -1,0 +1,25 @@
+opam-version: "2.0"
+name:         "hxd"
+maintainer:   "Romain Calascibetta <romain.calascibetta@gmail.com>"
+authors:      "Romain Calascibetta <romain.calascibetta@gmail.com>"
+homepage:     "https://github.com/mirage/decompress"
+bug-reports:  "https://github.com/mirage/decompress/issues"
+dev-repo:     "git+https://github.com/mirage/decompress.git"
+doc:          "https://mirage.github.io/decompress/"
+license:      "MIT"
+synopsis:     "Hexdump in OCaml"
+description: """Please, help me to debug ocaml-git
+"""
+
+build: [
+  [ "dune" "subst" ]
+  [ "dune" "build" "-p" name "-j" jobs ]
+  [ "dune" "runtest" "-p" name "-j" jobs ] {with-test}
+]
+
+depends: [
+  "ocaml"      {>= "4.03.0"}
+  "dune"       {build}
+  "base-bytes"
+  "base-bigarray"
+]
