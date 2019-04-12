@@ -14,6 +14,7 @@ val xxd :
   ?cols:int ->
   ?groupsize:int ->
   ?long:int ->
+  ?buffer_size:(int * int) ->
   ?uppercase:bool ->
   colorscheme ->
   cfg
@@ -22,6 +23,7 @@ val caml :
   ?with_comments:bool ->
   ?cols:int ->
   ?long:int ->
+  ?buffer_size:(int * int) ->
   ?uppercase:bool ->
   [ `List | `Array ] ->
   cfg

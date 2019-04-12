@@ -26,6 +26,8 @@ type xxd =
   ; groupsize : int
   ; long : int option
   ; uppercase : bool
+  ; i_buffer_size : int
+  ; o_buffer_size : int
   ; colorscheme : colorscheme }
 
 type caml =
@@ -33,6 +35,8 @@ type caml =
   ; with_comments : bool
   ; cols : int
   ; long : int option
+  ; i_buffer_size : int
+  ; o_buffer_size : int
   ; uppercase : bool }
 
 let fmt_of_byte uppercase
@@ -136,20 +140,29 @@ let default =
       ; groupsize= 2
       ; long= None
       ; uppercase= false
+      ; i_buffer_size= 4096
+      ; o_buffer_size= 4096
       ; colorscheme= Array.make 256 `None }
 
-let xxd ?(cols= 16) ?(groupsize= 2) ?long ?(uppercase= false) colorscheme =
+let xxd ?(cols= 16) ?(groupsize= 2) ?long
+    ?buffer_size:((i_buffer_size, o_buffer_size)= 4096, 4096) ?(uppercase= false) colorscheme =
   Xxd { cols
       ; groupsize
       ; long
       ; uppercase
+      ; i_buffer_size
+      ; o_buffer_size
       ; colorscheme }
 
-let caml ?(with_comments= false) ?(cols= 16) ?long ?(uppercase= false) kind =
+let caml
+    ?(with_comments= false) ?(cols= 16) ?long
+    ?buffer_size:((i_buffer_size, o_buffer_size)= 4096, 4096) ?(uppercase= false) kind =
   Caml { kind
        ; with_comments
        ; cols
        ; long
+       ; i_buffer_size
+       ; o_buffer_size
        ; uppercase }
 
 let cols = function
@@ -159,6 +172,14 @@ let cols = function
 let long = function
   | Xxd xxd -> xxd.long
   | Caml caml -> caml.long
+
+let i_buffer_size = function
+  | Xxd xxd -> xxd.i_buffer_size
+  | Caml caml -> caml.i_buffer_size
+
+let o_buffer_size = function
+  | Xxd xxd -> xxd.o_buffer_size
+  | Caml caml -> caml.o_buffer_size
 
 let o :
   type fi fo s e.
@@ -174,8 +195,8 @@ let o :
   let ( >>= ) = s.bind in
   let return = s.return in
 
-  let i_buffer_size = 4096 in
-  let o_buffer_size = 4096 in
+  let i_buffer_size = i_buffer_size cfg in
+  let o_buffer_size = o_buffer_size cfg in
   let itmp = Bytes.create i_buffer_size in
   let otmp = Bytes.create o_buffer_size in
 
