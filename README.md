@@ -40,3 +40,11 @@ Or a Caml output with `$ hxd.caml --with-comments dump`:
 ; "\x52\x14\x92\x8b\xf2\xcb\x93\x12\x8b\x34\x35\x01\x2c\x48\x13\x4f" (* R........45.,H.O *)
 ]
 ```
+
+Repository has an OPAM package, so:
+
+```
+$ opam pin add hxd https://github.com/dinosaure/hxd.git
+```
+
+is enough to get this fabulous binary.
