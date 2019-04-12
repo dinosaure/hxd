@@ -27,7 +27,7 @@ let null =
     ; out_spaces= (fun _ -> ())
     ; out_indent= (fun _ -> ()) }
 
-let do_cmd cols long uppercase kind seek ic oc =
+let do_cmd cols long uppercase kind with_comments seek ic oc =
   let ic, ic_close = match ic with
     | `Stdin -> stdin, (fun () -> ())
     | `File path ->
@@ -38,7 +38,7 @@ let do_cmd cols long uppercase kind seek ic oc =
     | `File path ->
       let oc = open_out (Fpath.to_string path) in
       oc, (fun () -> close_out oc) in
-  let configuration = Hxd.O.caml ?cols ?long ~uppercase kind in
+  let configuration = Hxd.O.caml ?cols ?long ~uppercase ~with_comments kind in
   let res = Hxd_unix.o configuration ic oc seek null in
   ic_close () ; oc_close () ; match res with
   | Ok () -> `Ok ()
@@ -132,6 +132,10 @@ let uppercase =
   let doc = "Use upper case hex letters. Default is lower case." in
   Arg.(value & flag & info [ "u" ] ~doc)
 
+let with_comments =
+  let doc = "Print comments which is a human-readable equivalent of line" in
+  Arg.(value & flag & info [ "with-comments" ] ~doc)
+
 let ic =
   Arg.(value & pos 0 ic `Stdin & info [] ~docv:"<infile>")
 
@@ -157,7 +161,7 @@ let cmd =
     ; `P "$(tname) creates a camlized hex dump of a given file or standard \
           input. It allows the transmission of binary data in a mail-safe ASCII \
           representation. It can be used to perform binary file patching." ] in
-  Term.(pure do_cmd $ cols $ long $ uppercase $ kind $ seek $ ic $ oc),
+  Term.(pure do_cmd $ cols $ long $ uppercase $ kind $ with_comments $ seek $ ic $ oc),
   Term.info "xxd" ~version:"%%VERSION%%" ~doc ~man
 
 let () = Term.(exit @@ eval cmd)
