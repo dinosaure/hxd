@@ -3,11 +3,11 @@ open S
 
 module Unix_scheduler = Make(struct type +'a t = 'a end)
 
-type error = |
+type error = Seek
 
 module Caml_iflow = struct
   type scheduler = Unix_scheduler.t
-  type nonrec error = error = |
+  type nonrec error = error = Seek
   type flow = in_channel
   type buffer = bytes
 
@@ -16,7 +16,7 @@ end
 
 module Caml_oflow = struct
   type scheduler = Unix_scheduler.t
-  type nonrec error = error = |
+  type nonrec error = error = Seek
   type flow = out_channel
   type buffer = string
 
@@ -33,11 +33,12 @@ let lseek =
           | `CUR -> Unix.SEEK_CUR
           | `END -> Unix.SEEK_END
           | `SET -> Unix.SEEK_SET in
-        let res = Unix.lseek (Unix.descr_of_in_channel ic) pos mode in
-        Unix_scheduler.inj (Ok res) }
+        match Unix.lseek (Unix.descr_of_in_channel ic) pos mode with
+        | res -> Unix_scheduler.inj (Ok res)
+        | exception _ -> Unix_scheduler.inj (Error Seek)}
 
 let o configuration ic oc seek ppf =
   let res = O.o configuration unix (module Caml_iflow) (module Caml_oflow) ic oc lseek seek ppf in
   match Unix_scheduler.prj res with
-  | Ok () -> ()
-  | Error (_ : error) -> .
+  | Ok () -> Ok ()
+  | Error Seek -> Error (`Msg "Seek operation")

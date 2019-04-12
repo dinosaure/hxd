@@ -3,3 +3,9 @@
  (public_name hxd.xxd)
  (modules xxd)
  (libraries fmt hxd fpath angstrom rresult cmdliner hxd_unix))
+
+(executable
+ (name caml)
+ (public_name hxd.caml)
+ (modules caml)
+ (libraries fmt hxd fpath angstrom rresult cmdliner hxd_unix))

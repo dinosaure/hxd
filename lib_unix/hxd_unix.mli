@@ -1,1 +1,1 @@
-val o : Hxd.O.configuration -> in_channel -> out_channel -> [ `Absolute of int | `Relative of int ] -> Format.formatter -> unit
+val o : Hxd.O.cfg -> in_channel -> out_channel -> [ `Absolute of int | `Relative of int ] -> Format.formatter -> (unit, [ `Msg of string ]) result

@@ -8,20 +8,28 @@ val uppercase : colorscheme -> Fmt.style -> unit
 val digit : colorscheme -> Fmt.style -> unit
 val code : colorscheme -> int -> Fmt.style -> unit
 
-type configuration
+type cfg
 
-val configuration :
+val xxd :
   ?cols:int ->
   ?groupsize:int ->
   ?long:int ->
   ?uppercase:bool ->
   colorscheme ->
-  configuration
+  cfg
 
-val default : configuration
+val caml :
+  ?with_comments:bool ->
+  ?cols:int ->
+  ?long:int ->
+  ?uppercase:bool ->
+  [ `List | `Array ] ->
+  cfg
+
+val default : cfg
 
 val o :
-  configuration ->
+  cfg ->
   's scheduler ->
   ('fi, bytes, 's, 'e) iflow ->
   ('fo, string, 's, 'e) oflow ->

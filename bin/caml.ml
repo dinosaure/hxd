@@ -27,7 +27,7 @@ let null =
     ; out_spaces= (fun _ -> ())
     ; out_indent= (fun _ -> ()) }
 
-let do_cmd () cols groupsize long uppercase seek ic oc =
+let do_cmd cols long uppercase kind seek ic oc =
   let ic, ic_close = match ic with
     | `Stdin -> stdin, (fun () -> ())
     | `File path ->
@@ -38,15 +38,11 @@ let do_cmd () cols groupsize long uppercase seek ic oc =
     | `File path ->
       let oc = open_out (Fpath.to_string path) in
       oc, (fun () -> close_out oc) in
-  let configuration = Hxd.O.xxd ?cols ?groupsize ?long ~uppercase notzen in
+  let configuration = Hxd.O.caml ?cols ?long ~uppercase kind in
   let res = Hxd_unix.o configuration ic oc seek null in
   ic_close () ; oc_close () ; match res with
   | Ok () -> `Ok ()
   | Error err -> `Error err
-
-let do_fmt style_renderer =
-  (* XXX(dinosaure): [fmt] hacks on tags to turn on colors. *)
-  Option.iter (Hxd.Fmt.set_style_renderer null) style_renderer
 
 let parser_seek x =
   let is_digit = function '0' .. '9' -> true | _ -> false in
@@ -109,6 +105,16 @@ let number =
       Rresult.R.error_msgf "Invalid <number> value: %S" x in
   Arg.conv ~docv:"<number>" (parser, pp)
 
+let kind =
+  let pp ppf = function
+    | `List -> Fmt.string ppf "list"
+    | `Array -> Fmt.string ppf "array" in
+  let parser = function
+    | "list" -> Ok `List
+    | "array" -> Ok `Array
+    | x -> Rresult.R.error_msgf "Invalid <kind> value: %S" x in
+  Arg.conv ~docv:"<kind>" (parser, pp)
+
 let cols =
   let doc = "Format <cols> octets per line. Default 16. Max 256." in
   Arg.(value & opt (some cols) None & info [ "c"; "cols" ] ~doc ~docv:"<cols>")
@@ -140,28 +146,18 @@ let seek =
              position." in
   Arg.(value & opt seek (`Relative 0) & info [ "s"; "seek" ] ~doc ~docv:"<seek>")
 
-(* (c) Daniel Bünzli *)
-let style_renderer ?env () =
-  let enum = [ "auto", None
-             ; "always", Some `Ansi
-             ; "never", Some `None ] in
-  let color = Arg.enum enum in
-  let enum_alts = Arg.doc_alts_enum enum in
-  let doc = Fmt.strf "Colorize the output. $(docv) must be %s." enum_alts in
-  Arg.(value & opt color None & info ["color"] ?env ~doc ~docv:"<when>")
-
-let setup_fmt =
-  let env = Arg.env_var "XXD_COLOR" in
-  Term.(const do_fmt $ style_renderer ~env ())
+let kind =
+  let doc = "Type of output, if you want a string list (default) or a string array." in
+  Arg.(value & opt kind (`List : [ `List | `Array ]) & info [ "k"; "kind" ] ~doc ~docv:"<kind>")
 
 let cmd =
   let doc = "Make a hexdump." in
   let man =
     [ `S "DESCRIPTION"
-    ; `P "$(tname) creates a hex dump of a given file or standard input. It allows the transmission \
-          of binary data in a mail-safe ASCII representation. It can be used to perform binary \
-          file patching." ] in
-  Term.(pure do_cmd $ setup_fmt $ cols $ groupsize $ long $ uppercase $ seek $ ic $ oc),
+    ; `P "$(tname) creates a camlized hex dump of a given file or standard \
+          input. It allows the transmission of binary data in a mail-safe ASCII \
+          representation. It can be used to perform binary file patching." ] in
+  Term.(pure do_cmd $ cols $ long $ uppercase $ kind $ seek $ ic $ oc),
   Term.info "xxd" ~version:"%%VERSION%%" ~doc ~man
 
 let () = Term.(exit @@ eval cmd)

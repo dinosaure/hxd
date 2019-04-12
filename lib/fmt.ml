@@ -49,13 +49,36 @@ type standard =
   | `Cyan
   | `White ]
 
+type bright = [ `Bright of standard ]
+type bit8 = [ `bit8 of (int * int * int) ]
+type bit24 = [ `bit24 of (int * int * int) ]
+type grayscale = [ `Grayscale of int ]
+
 type style =
   [ `None
-  | `Style of ([ `Fg | `Bg ] * [ standard | `Bright of standard | `RGB of (int * int * int) | `Grayscale of int ]) ]
+  | `Style of ([ `Fg | `Bg ] * [ standard
+                               | bright
+                               | bit8
+                               | bit24
+                               | grayscale ]) ]
+
+type rest =
+  [ standard
+  | bright
+  | bit8
+  | grayscale ]
 
 let ansi_style_code = function
   | `None -> ansi_style_reset
-  | `Style (where, color)->
+  | `Style (where, (#bit24 as color)) ->
+    let `bit24 (r, g, b) = color in
+    if r >= 0 && r <= 255
+       && g >= 0 && g <= 255
+       && b >= 0 && b <= 255
+    then let where = match where with `Fg -> 38 | `Bg -> 48 in
+      Format.asprintf "\x1b[%d;2;%d;%d;%dm" where r g b
+    else invalid_arg "Invalid color: bit24(%d, %d, %d)" r g b
+  | `Style (where, (#rest as color))->
     let where = match where with
       | `Fg -> 38 | `Bg -> 48 in
     let color = match color with
@@ -63,12 +86,12 @@ let ansi_style_code = function
       | `Bright color ->
         (match color with
          | `Black -> 8 | `Red -> 9 | `Green -> 10 | `Yellow -> 11 | `Blue -> 12 | `Magenta -> 13 | `Cyan -> 14 | `White -> 15)
-      | `RGB (r, g, b) ->
+      | `bit8 (r, g, b) ->
         if r >= 0 && r <= 5
            && g >= 0 && g <= 5
            && b >= 0 && b <= 5
         then 16 + 36 * r + 6 * g + b
-        else invalid_arg "Invalid color: RGB(%d, %d, %d)" r g b
+        else invalid_arg "Invalid color: bit8(%d, %d, %d)" r g b
       | `Grayscale n ->
         if n >= 0 && n <= 24
         then 232 + n
