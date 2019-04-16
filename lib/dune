@@ -1,3 +1,4 @@
 (library
  (name hxd)
+ (public_name hxd.core)
  (libraries astring angstrom))
