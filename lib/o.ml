@@ -81,7 +81,7 @@ let pp_like_xxd (xxd:xxd) ~seek ppf chunk =
     incr off
   done ;
 
-  Format.pp_print_string ppf "\n"
+  Format.pp_print_newline ppf ()
 
 type pp = seek:int -> Format.formatter -> payload -> unit
 
