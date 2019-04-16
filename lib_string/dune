@@ -2,5 +2,4 @@
  (public_name hxd.string)
  (name hxd_string)
  (modules hxd_string)
- (optional)
  (libraries hxd))
