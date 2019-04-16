@@ -81,7 +81,7 @@ let pp_like_xxd (xxd:xxd) ~seek ppf chunk =
     incr off
   done ;
 
-  Format.pp_print_newline ppf ()
+  Format.fprintf ppf "@,"
 
 type pp = seek:int -> Format.formatter -> payload -> unit
 
@@ -116,7 +116,7 @@ let pp_like_caml caml ~seek:_ ppf chunk =
   if caml.with_comments
   then ( Format.fprintf ppf " (* %a *)" pp_chunk chunk ) ;
 
-  Format.pp_print_string ppf "\n"
+  Format.fprintf ppf "@,"
 
 type cfg =
   | Xxd of xxd
