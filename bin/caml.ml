@@ -51,7 +51,7 @@ let parser_seek x =
     (option `None (char '+' *> return `Plus)) >>= fun is_relative ->
     (option `Positive (char ':' *> return `Negative)) >>= fun sign ->
     take_while is_digit >>| fun number -> (is_relative, sign, int_of_string number) in
-  match Angstrom.parse_string parser x with
+  match Angstrom.parse_string ~consume:Angstrom.Consume.All parser x with
   | Ok (`None, `Positive, n) -> Ok (`Absolute n)
   | Ok (`None, `Negative, n) -> Ok (`Absolute (- n))
   | Ok (`Plus, `Positive, n) -> Ok (`Relative n)
