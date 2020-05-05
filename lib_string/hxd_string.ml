@@ -55,7 +55,7 @@ let o configuration str seek ppf =
 module Caml_onull = struct
   type scheduler = Caml_scheduler.t
   type nonrec error = error = Seek
-  type flow = ()
+  type flow = unit
   type buffer = string
 
   let output () _ ~off:_ ~len = Caml_scheduler.inj (Ok len)

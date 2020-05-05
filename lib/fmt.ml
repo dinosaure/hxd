@@ -1,9 +1,9 @@
 (* (c) Daniel Bünzli *)
 
+open Stdlib
+
 let invalid_arg fmt =
   Format.kasprintf invalid_arg fmt
-
-let style_renderer_tag = "hxd.style_renderer"
 
 let style_renderer_of_raw = function
   | "\x00" -> `None
@@ -14,14 +14,17 @@ let style_renderer_to_raw = function
   | `None -> "\x00"
   | `Ansi -> "\x01"
 
-let meta_store ppf = Format.pp_get_formatter_tag_functions ppf ()
-let set_meta_store ppf store = Format.pp_set_formatter_tag_functions ppf store
-let meta_raw store tag = store.Format.mark_open_tag tag
+type Format.stag += Hxd_style_renderer
+let style_renderer_tag = Hxd_style_renderer
+
+let meta_store ppf = Format.pp_get_formatter_stag_functions ppf ()
+let set_meta_store ppf store = Format.pp_set_formatter_stag_functions ppf store
+let meta_raw store tag = store.Format.mark_open_stag tag
 let set_meta ppf store ~style_renderer =
   let meta = function
-    | "hxd.style_renderer" -> style_renderer
+    | Hxd_style_renderer -> style_renderer
     | _ -> "Hxd: god, we broken everythings" in
-  let store = { store with Format.mark_open_tag= meta } in
+  let store = { store with Format.mark_open_stag= meta } in
   set_meta_store ppf store
 
 let style_renderer ppf =
