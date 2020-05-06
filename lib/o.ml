@@ -104,10 +104,6 @@ let pp_like_xxd (xxd : xxd) ~seek ppf chunk =
 
 type pp = seek:int -> Format.formatter -> payload -> unit
 
-let pp_middle ppf = function
-  | `List -> Format.pp_print_string ppf "; \""
-  | `Array -> Format.pp_print_string ppf " ; \""
-
 let pp_chunk ppf chunk =
   for i = 0 to String.length chunk - 1 do
     match chunk.[i] with
@@ -119,7 +115,7 @@ let pp_chunk ppf chunk =
 let pp_like_caml caml ~seek:_ ppf chunk =
   assert (String.length chunk <= caml.cols) ;
 
-  Format.fprintf ppf "%a" pp_middle caml.kind ;
+  Format.fprintf ppf "  \"" ;
 
   (* TODO: [long] *)
   for i = 0 to String.length chunk - 1 do
@@ -128,7 +124,7 @@ let pp_like_caml caml ~seek:_ ppf chunk =
       (Char.code chunk.[i])
   done ;
 
-  Format.pp_print_string ppf "\"" ;
+  Format.pp_print_string ppf "\" ;" ;
 
   if String.length chunk < caml.cols
   then
