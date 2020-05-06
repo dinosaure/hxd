@@ -1,4 +1,11 @@
 (library
  (name hxd)
+ (modules fmt_meta fmt hxd ke b o s)
  (public_name hxd.core)
  (libraries stdlib-shims bigarray))
+
+(rule
+ (targets fmt_meta.ml)
+ (deps fmt_meta_pre407.ml fmt_meta_stable.ml)
+ (action
+  (run ../config/config.exe)))
