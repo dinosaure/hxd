@@ -1,5 +1,6 @@
 (library
  (name hxd_lwt)
  (modules hxd_lwt)
+ (public_name hxd.lwt)
  (optional)
  (libraries lwt hxd))

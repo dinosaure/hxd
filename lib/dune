@@ -1,8 +1,7 @@
 (library
  (name hxd)
- (modules fmt_meta fmt hxd ke b o s)
- (public_name hxd.core)
- (libraries stdlib-shims bigarray))
+ (modules fmt_meta fmt hxd o s)
+ (public_name hxd.core))
 
 (rule
  (targets fmt_meta.ml)

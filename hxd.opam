@@ -1,3 +1,4 @@
+version: "0.1.0-32-gd4e043c"
 opam-version: "2.0"
 name:         "hxd"
 maintainer:   "Romain Calascibetta <romain.calascibetta@gmail.com>"
@@ -12,21 +13,17 @@ description: """Please, help me to debug ocaml-git
 """
 
 build: [
-  [ "dune" "subst" ]
   [ "dune" "build" "-p" name "-j" jobs ]
   [ "dune" "runtest" "-p" name "-j" jobs ] {with-test}
 ]
 
 depends: [
-  "ocaml"      {>= "4.06.0"}
-  "dune"       {>= "2.0"}
-  "base-bytes"
-  "base-bigarray"
-  "base-unix"
-  "angstrom" {>= "0.14.0"}
-  "stdlib-shims"
-  "rresult"
-  "fmt"
+  "ocaml"             {>= "4.06.0"}
+  "dune"              {>= "2.0"}
+  "dune-configurator" {>= "2.0.1"}
   "cmdliner"
-  "fpath"
+]
+
+depopts: [
+  "lwt"
 ]

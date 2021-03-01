@@ -1,3 +1,3 @@
 module Fmt = Fmt
-module S = S
-module O = O
+include S
+include O
