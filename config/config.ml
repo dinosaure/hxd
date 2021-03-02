@@ -1,8 +1,8 @@
 module Config = Configurator.V1
 
-type t = { major : int; minor : int; patch : int option; extra : string option }
+type t = {major: int; minor: int; patch: int option; extra: string option}
 
-let v ?patch ?extra major minor = { major; minor; patch; extra }
+let v ?patch ?extra major minor = {major; minor; patch; extra}
 
 let parse s =
   try
@@ -27,22 +27,18 @@ let ocaml_cp ~src ~dst =
   let rec go () =
     match input ic bf 0 (Bytes.length bf) with
     | 0 -> ()
-    | len ->
-        output oc bf 0 len ;
-        go ()
+    | len -> output oc bf 0 len ; go ()
     | exception End_of_file -> () in
-  go () ;
-  close_in ic ;
-  close_out oc
+  go () ; close_in ic ; close_out oc
 
 let () =
   Config.main ~name:"config-base64" @@ fun t ->
   match Config.ocaml_config_var t "version" >|= parse with
   | Some version ->
-      let dst = "fmt_meta.ml" in
+    let dst = "fmt_meta.ml" in
 
-      if (version.major, version.minor) > (4, 7)
-      then ocaml_cp ~src:"fmt_meta_stable.ml" ~dst
-      else ocaml_cp ~src:"fmt_meta_pre407.ml" ~dst
+    if (version.major, version.minor) > (4, 7) then
+      ocaml_cp ~src:"fmt_meta_stable.ml" ~dst
+    else ocaml_cp ~src:"fmt_meta_pre407.ml" ~dst
   | None -> Config.die "OCaml version is not available"
   | exception exn -> Config.die "Got an exception: %s" (Printexc.to_string exn)
