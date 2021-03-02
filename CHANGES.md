@@ -1,3 +1,11 @@
+v0.3.0 2021-02-03 Paris (France)
+--------------------------------
+
+- Add LICENSE.md
+- Keep compatibility with 4.06
+- Big improvement on the produced tool
+- Lint dependencies
+
 v0.2.0 2020-05-05 Paris (France)
 --------------------------------
 
