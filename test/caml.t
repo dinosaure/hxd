@@ -108,7 +108,15 @@ Tests about caml outputs
   $ ocamlopt main.ml
   $ ./a.out
   Hello World!
+  $ echo "abababababababab" | hxd.caml --with-comments -k array
+  [| "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"    (* abababababababab *)
+   ; "\x0a" |]                                                             (* .                *)
+  $ echo -n "abababababababababababababababab" | hxd.caml --with-comments -k array
+  [| "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"    (* abababababababab *)
+   ; "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62" |] (* abababababababab *)
   $ echo "foo & bar" | hxd.caml --with-comments -k array
   [| "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72\x0a" |]                         (* foo & bar.       *)
   $ echo "foo & bar" | hxd.caml --with-comments -k array -c10
   [| "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72\x0a" |] (* foo & bar. *)
+  $ echo "Hello World!"
+  Hello World!
