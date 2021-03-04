@@ -70,6 +70,8 @@ let to_hexdigit alphabet pad off output len value =
 
 let apply_style code ~off output = Fmt.ansi_style_code output off code
 let reset_style ~off output = Fmt.ansi_style_code output off `None
+let _begin = 0b01
+let _end = 0b10
 
 let with_comments (cfg : caml) input src_off src_len output dst_off =
   let dst_off =
@@ -146,9 +148,6 @@ let deterministic_length styled (cfg : xxd) input off len =
 
 let formatter_is_styled ppf =
   match Fmt.style_renderer ppf with `None -> false | `Ansi -> true
-
-let _begin = 0b01
-let _end = 0b10
 
 let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
   let styled = formatter_is_styled ppf in
@@ -233,8 +232,8 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
             ; off := !off + 2
           | `Array ->
             output.![!off] <- ' '
-            ; output.![!off] <- ' '
-            ; output.![!off] <- ' '
+            ; output.![!off + 1] <- ' '
+            ; output.![!off + 2] <- ' '
             ; off := !off + 3)
       ; if cfg.with_comments then
           off := with_comments cfg input src_off src_len output !off
