@@ -231,6 +231,6 @@ let cmd =
       $ seek
       $ ic
       $ oc)
-  , Term.info "xxd" ~version:"v0.1.0-32-gd4e043c" ~doc ~man )
+  , Term.info "xxd" ~version:"%%VERSION%%" ~doc ~man )
 
 let () = Term.(exit @@ eval cmd)
