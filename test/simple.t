@@ -13,7 +13,7 @@ Simple tests
   $ printf 'abababababababab\0' | hxd.xxd
   00000000: 6162 6162 6162 6162 6162 6162 6162 6162  abababababababab
   00000010: 00                                       .
-  $ yes "Hello World!" | head -n 10 | hxd.xxd
+  $ yes "Hello World!" 2> /dev/null | head -n 10 | hxd.xxd
   00000000: 4865 6c6c 6f20 576f 726c 6421 0a48 656c  Hello World!.Hel
   00000010: 6c6f 2057 6f72 6c64 210a 4865 6c6c 6f20  lo World!.Hello 
   00000020: 576f 726c 6421 0a48 656c 6c6f 2057 6f72  World!.Hello Wor
@@ -40,7 +40,7 @@ Simple tests
   Hello World!
   $ cat hex_copy
   00000000: 4865 6c6c 6f20 576f 726c 6421 0a         Hello World!.
-  $ yes "Hello World!" | head -n100 > file
+  $ yes "Hello World!" 2> /dev/null | head -n100 > file
   $ sh -c "dd of=plain_snippet status=none bs=1k count=1; hxd.xxd -s +128 > hex_snippet" < file
   $ hxd.xxd -s 0x480 file > result.out
   $ diff hex_snippet result.out
