@@ -56,7 +56,7 @@ Tests about caml outputs
   $ ocamlopt main.ml
   $ ./a.out
   foo & bar
-  $ yes "Hello World!" | head -n 10 | hxd.caml --kind=array
+  $ yes "Hello World!" 2> /dev/null | head -n 10 | hxd.caml --kind=array
   [| "\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x0a\x48\x65\x6c"
    ; "\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x0a\x48\x65\x6c\x6c\x6f\x20"
    ; "\x57\x6f\x72\x6c\x64\x21\x0a\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72"
@@ -66,7 +66,7 @@ Tests about caml outputs
    ; "\x20\x57\x6f\x72\x6c\x64\x21\x0a\x48\x65\x6c\x6c\x6f\x20\x57\x6f"
    ; "\x72\x6c\x64\x21\x0a\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64"
    ; "\x21\x0a" |]
-  $ yes "Hello World!" | head -n100 > file
+  $ yes "Hello World!" 2> /dev/null | head -n100 > file
   $ sh -c "dd of=plain_snippet status=none bs=1k count=1; hxd.caml -s +128 > caml_snippet" < file
   $ cat >main.ml <<EOF
   > let input = 
