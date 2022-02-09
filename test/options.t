@@ -28,7 +28,7 @@ Tests about options
   00000000: 5A6A 6B6C 6D6E 6F                        Zjklmno
   $ echo -n "" | hxd.xxd -s +1
   xxd: sorry cannot seek.
-  [1]
+  [123]
   $ echo -n "foo & bar" | hxd.xxd -s +6
   00000006: 6261 72                                  bar
   $ echo -n "foo & bar" | hxd.xxd -s 6

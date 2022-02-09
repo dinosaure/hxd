@@ -33,7 +33,7 @@ let do_cmd cols long uppercase kind with_comments seek ic oc =
   let res = Hxd_unix.generate configuration ic oc seek null in
   ic_close ()
   ; oc_close ()
-  ; match res with Ok () -> `Ok () | Error err -> `Error err
+  ; Result.map_error (fun (`Msg err) -> err) res
 
 let string_for_all p str =
   let cursor = ref 0 in
@@ -215,16 +215,17 @@ let cmd =
          input. It allows the transmission of binary data in a mail-safe ASCII \
          representation. It can be used to perform binary file patching."
     ] in
-  ( Term.(
-      pure do_cmd
-      $ cols
-      $ long
-      $ uppercase
-      $ kind
-      $ with_comments
-      $ seek
-      $ ic
-      $ oc)
-  , Term.info "xxd" ~version:"%%VERSION%%" ~doc ~man )
+  let info = Cmd.info "xdd" ~version:"%%VERSION%%" ~doc ~man in
+  Cmd.v info
+    Term.(
+    const do_cmd
+    $ cols
+    $ long
+    $ uppercase
+    $ kind
+    $ with_comments
+    $ seek
+    $ ic
+    $ oc)
 
-let () = Term.(exit @@ eval cmd)
+let () = exit (Cmd.eval_result cmd)
