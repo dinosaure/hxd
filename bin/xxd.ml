@@ -1,15 +1,9 @@
 let ( <.> ) f g x = f (g x)
 let invalid_arg fmt = Format.kasprintf invalid_arg fmt
 
-module Option = struct
-  let map f x = match x with Some x -> Some (f x) | None -> None
-  let iter f x = match x with Some x -> f x | None -> ()
-end
-
 module Result = struct
+  include Result
   let error_msgf fmt = Format.kasprintf (fun err -> Error (`Msg err)) fmt
-  let ok v = Ok v
-  let map f = function Ok x -> Ok (f x) | Error err -> Error err
 end
 
 let x = Array.make 256 `None
