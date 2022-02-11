@@ -1,15 +1,9 @@
 let ( <.> ) f g x = f (g x)
 let invalid_arg fmt = Format.kasprintf invalid_arg fmt
 
-module Option = struct
-  let map f x = match x with Some x -> Some (f x) | None -> None
-  let iter f x = match x with Some x -> f x | None -> ()
-end
-
 module Result = struct
+  include Result
   let error_msgf fmt = Format.kasprintf (fun err -> Error (`Msg err)) fmt
-  let ok v = Ok v
-  let map f = function Ok x -> Ok (f x) | Error err -> Error err
 end
 
 let x = Array.make 256 `None
@@ -105,9 +99,7 @@ let do_cmd () cols groupsize long uppercase pixel seek ic oc =
   let res = Hxd_unix.generate configuration ic oc seek null in
   ic_close ()
   ; oc_close ()
-  ; match res with
-    | Ok () -> `Ok 0
-    | Error (`Msg err) -> `Error (false, Format.asprintf "%s." err)
+  ; Result.map_error (fun (`Msg err) -> Format.asprintf "%s." err) res
 
 let do_fmt style_renderer =
   (* XXX(dinosaure): [fmt] hacks on tags to turn on colors. *)
@@ -273,7 +265,7 @@ let style_renderer ?env () =
   Arg.(value & opt color None & info ["color"] ?env ~doc ~docv:"<when>")
 
 let setup_fmt =
-  let env = Arg.env_var "HXD_COLOR" in
+  let env = Cmd.Env.info "HXD_COLOR" in
   Term.(const do_fmt $ style_renderer ~env ())
 
 let cmd =
@@ -286,18 +278,18 @@ let cmd =
          allows the transmission of binary data in a mail-safe ASCII \
          representation. It can be used to perform binary file patching."
     ] in
-  ( Term.(
-      ret
-        (const do_cmd
-        $ setup_fmt
-        $ cols
-        $ groupsize
-        $ long
-        $ uppercase
-        $ pixel
-        $ seek
-        $ ic
-        $ oc))
-  , Term.info "xxd" ~version:"%%VERSION%%" ~doc ~man )
+  let info = Cmd.info "xxd" ~version:"%%VERSION%%" ~doc ~man in
+  Cmd.v info
+    Term.(
+    const do_cmd
+    $ setup_fmt
+    $ cols
+    $ groupsize
+    $ long
+    $ uppercase
+    $ pixel
+    $ seek
+    $ ic
+    $ oc)
 
-let () = Term.(exit_status @@ eval cmd)
+let () = exit (Cmd.eval_result cmd)
