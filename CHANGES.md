@@ -1,3 +1,9 @@
+v0.3.2 2022-02-28 Paris (France)
+--------------------------------
+
+* Prevent tests using yes from failing if SIGPIPE is trapped (@sternenseemann, #11)
+* Upgrade `hxd` with `cmdliner.1.1.0` (@MisterDA, #12)
+
 v0.3.1 2021-04-03 Paris (France)
 --------------------------------
 
