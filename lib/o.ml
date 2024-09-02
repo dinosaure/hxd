@@ -98,7 +98,9 @@ let with_comments (cfg : caml) input src_off src_len output dst_off =
       ; incr dst_off ; incr cursor
     done
     ; while !cursor < cfg.cols do
-        output.![!dst_off] <- ' ' ; incr dst_off ; incr cursor
+        output.![!dst_off] <- ' '
+        ; incr dst_off
+        ; incr cursor
       done
     ; output.![!dst_off + 0] <- ' '
     ; output.![!dst_off + 1] <- '*'
@@ -161,7 +163,9 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
       let off = ref (dst_off + 9) in
       let top = !off + deterministic_length styled cfg input src_off src_len in
       for i = 0 to src_len - 1 do
-        if i mod cfg.groupsize = 0 then (output.![!off] <- ' ' ; incr off)
+        if i mod cfg.groupsize = 0 then (
+          output.![!off] <- ' '
+          ; incr off)
         ; if styled then
             off :=
               apply_style
@@ -172,7 +176,8 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
         ; if styled then off := reset_style ~off:!off output
       done
       ; for _ = !off to top - 1 do
-          output.![!off] <- ' ' ; incr off
+          output.![!off] <- ' '
+          ; incr off
         done
       ; for i = 0 to src_len - 1 do
           match input.[src_off + i] with
@@ -187,19 +192,23 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
     let alphabet = if cfg.uppercase then a_uppercase else a_lowercase in
     let off = ref dst_off in
     (if state land _begin <> 0 then (
-     match cfg.kind with
-     | `List -> output.![!off] <- '[' ; incr off
-     | `Array ->
-       output.![!off] <- '['
-       ; output.![!off + 1] <- '|'
-       ; off := !off + 2)
-    else
-      match cfg.kind with
-      | `List -> output.![!off] <- ';' ; incr off
-      | `Array ->
-        output.![!off] <- ' '
-        ; output.![!off + 1] <- ';'
-        ; off := !off + 2)
+       match cfg.kind with
+       | `List ->
+         output.![!off] <- '['
+         ; incr off
+       | `Array ->
+         output.![!off] <- '['
+         ; output.![!off + 1] <- '|'
+         ; off := !off + 2)
+     else
+       match cfg.kind with
+       | `List ->
+         output.![!off] <- ';'
+         ; incr off
+       | `Array ->
+         output.![!off] <- ' '
+         ; output.![!off + 1] <- ';'
+         ; off := !off + 2)
     ; output.![!off] <- ' '
       ; output.![!off + 1] <- '"'
       ; off := !off + 2
@@ -214,27 +223,27 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
       ; output.![!off] <- '"'
       ; incr off
       ; (if state land _end <> 0 then (
-         match cfg.kind with
-         | `List ->
-           output.![!off] <- ' '
-           ; output.![!off + 1] <- ']'
-           ; off := !off + 2
-         | `Array ->
-           output.![!off] <- ' '
-           ; output.![!off + 1] <- '|'
-           ; output.![!off + 2] <- ']'
-           ; off := !off + 3)
-        else if cfg.with_comments then
-          match cfg.kind with
-          | `List ->
-            output.![!off] <- ' '
-            ; output.![!off + 1] <- ' '
-            ; off := !off + 2
-          | `Array ->
-            output.![!off] <- ' '
-            ; output.![!off + 1] <- ' '
-            ; output.![!off + 2] <- ' '
-            ; off := !off + 3)
+           match cfg.kind with
+           | `List ->
+             output.![!off] <- ' '
+             ; output.![!off + 1] <- ']'
+             ; off := !off + 2
+           | `Array ->
+             output.![!off] <- ' '
+             ; output.![!off + 1] <- '|'
+             ; output.![!off + 2] <- ']'
+             ; off := !off + 3)
+         else if cfg.with_comments then
+           match cfg.kind with
+           | `List ->
+             output.![!off] <- ' '
+             ; output.![!off + 1] <- ' '
+             ; off := !off + 2
+           | `Array ->
+             output.![!off] <- ' '
+             ; output.![!off + 1] <- ' '
+             ; output.![!off + 2] <- ' '
+             ; off := !off + 3)
       ; if cfg.with_comments then
           off := with_comments cfg input src_off src_len output !off
         ; output.![!off] <- '\n'

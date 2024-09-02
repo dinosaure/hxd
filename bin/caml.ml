@@ -3,6 +3,7 @@ let invalid_arg fmt = Format.kasprintf invalid_arg fmt
 
 module Result = struct
   include Result
+
   let error_msgf fmt = Format.kasprintf (fun err -> Error (`Msg err)) fmt
 end
 
@@ -218,14 +219,14 @@ let cmd =
   let info = Cmd.info "xdd" ~version:"%%VERSION%%" ~doc ~man in
   Cmd.v info
     Term.(
-    const do_cmd
-    $ cols
-    $ long
-    $ uppercase
-    $ kind
-    $ with_comments
-    $ seek
-    $ ic
-    $ oc)
+      const do_cmd
+      $ cols
+      $ long
+      $ uppercase
+      $ kind
+      $ with_comments
+      $ seek
+      $ ic
+      $ oc)
 
 let () = exit (Cmd.eval_result cmd)
