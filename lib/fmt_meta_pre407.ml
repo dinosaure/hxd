@@ -4,8 +4,9 @@ let set_meta_store ppf store = Format.pp_set_formatter_tag_functions ppf store
 let meta_raw store tag = store.Format.mark_open_tag tag
 
 let set_meta ppf store ~style_renderer =
-  let meta = function
+  let meta ~extra = function
     | "hxd.style_renderer" -> style_renderer
     | _ -> "Hxd: god, we broken everythings" in
-  let store = {store with Format.mark_open_tag= meta} in
+  let extra = (meta_store ppf).mark_open_tag in
+  let store = {store with Format.mark_open_tag= meta ~extra } in
   set_meta_store ppf store
