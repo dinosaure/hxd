@@ -1,20 +1,20 @@
 Tests about caml outputs
-  $ echo -n "foo" | hxd.caml
+  $ printf "foo" | hxd.caml
   [ "\x66\x6f\x6f" ]
-  $ echo -n "Hello World!" | hxd.caml > main.ml
+  $ printf "Hello World!" | hxd.caml > main.ml
   $ ocamlopt main.ml
   $ ./a.out
-  $ echo -n "abababababababab" | hxd.caml
+  $ printf "abababababababab" | hxd.caml
   [ "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62" ]
   $ printf "abababababababab\0" | hxd.caml
   [ "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"
   ; "\x00" ]
-  $ echo -n "aaaaaaaaa" | hxd.caml
+  $ printf "aaaaaaaaa" | hxd.caml
   [ "\x61\x61\x61\x61\x61\x61\x61\x61\x61" ]
-  $ echo -n "" | hxd.caml
+  $ printf "" | hxd.caml
   $ printf "\0" | hxd.caml
   [ "\x00" ]
-  $ echo -n "Hello World!" > input
+  $ printf "Hello World!" > input
   $ hxd.caml input
   [ "\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21" ]
   $ hxd.caml zh.txt
@@ -35,7 +35,7 @@ Tests about caml outputs
   $ ocamlopt main.ml
   $ ./a.out > result.out
   $ diff zh.txt result.out
-  $ echo -n "abababababababab" | hxd.caml -c2
+  $ printf "abababababababab" | hxd.caml -c2
   [ "\x61\x62"
   ; "\x61\x62"
   ; "\x61\x62"
@@ -44,7 +44,7 @@ Tests about caml outputs
   ; "\x61\x62"
   ; "\x61\x62"
   ; "\x61\x62" ]
-  $ echo -n "foo & bar" | hxd.caml -k array
+  $ printf "foo & bar" | hxd.caml -k array
   [| "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72" |]
   $ cat >main.ml <<EOF
   > let input =
@@ -93,7 +93,7 @@ Tests about caml outputs
   [ "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72\x0a" ]                         (* foo & bar.       *)
   $ echo "foo & bar" | hxd.caml --with-comments -c 10
   [ "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72\x0a" ] (* foo & bar. *)
-  $ echo -n "abababababababab" | hxd.caml --with-comments
+  $ printf "abababababababab" | hxd.caml --with-comments
   [ "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62" ] (* abababababababab *)
   $ printf "abababababababab\0" | hxd.caml --with-comments
   [ "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"   (* abababababababab *)
@@ -111,7 +111,7 @@ Tests about caml outputs
   $ echo "abababababababab" | hxd.caml --with-comments -k array
   [| "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"    (* abababababababab *)
    ; "\x0a" |]                                                             (* .                *)
-  $ echo -n "abababababababababababababababab" | hxd.caml --with-comments -k array
+  $ printf "abababababababababababababababab" | hxd.caml --with-comments -k array
   [| "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"    (* abababababababab *)
    ; "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62" |] (* abababababababab *)
   $ echo "foo & bar" | hxd.caml --with-comments -k array
