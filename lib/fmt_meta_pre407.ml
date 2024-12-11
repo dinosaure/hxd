@@ -8,5 +8,5 @@ let set_meta ppf store ~style_renderer =
     | "hxd.style_renderer" -> style_renderer
     | _ -> "Hxd: god, we broken everythings" in
   let extra = (meta_store ppf).mark_open_tag in
-  let store = {store with Format.mark_open_tag= meta ~extra } in
+  let store = {store with Format.mark_open_tag= meta ~extra} in
   set_meta_store ppf store

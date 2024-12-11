@@ -10,5 +10,5 @@ let set_meta ppf store ~style_renderer =
     | Hxd_style_renderer -> style_renderer
     | stag -> extra stag in
   let extra = (meta_store ppf).mark_open_stag in
-  let store = {store with Format.mark_open_stag= meta ~extra } in
+  let store = {store with Format.mark_open_stag= meta ~extra} in
   set_meta_store ppf store

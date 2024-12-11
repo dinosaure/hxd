@@ -284,8 +284,7 @@ let cols = function Xxd xxd -> xxd.cols | Caml caml -> caml.cols
 let long = function Xxd xxd -> xxd.long | Caml caml -> caml.long
 let io_buffer_size = 4096
 
-let refill :
-    type fi s e.
+let refill : type fi s e.
        s scheduler
     -> (fi, bytes, s, e) input
     -> fi
@@ -308,8 +307,7 @@ let refill :
     | Ok 0 -> return (Ok (true, 0))
     | Ok len -> return (Ok (false, len))
 
-let flush :
-    type fo s e.
+let flush : type fo s e.
        s scheduler
     -> (fo, string, s, e) output
     -> fo
@@ -318,8 +316,7 @@ let flush :
     -> ((int, e) result, s) io =
  fun _ send oc str ~len -> send oc str ~off:0 ~len
 
-let flush_all :
-    type fo s e.
+let flush_all : type fo s e.
        s scheduler
     -> (fo, string, s, e) output
     -> fo
@@ -348,8 +345,7 @@ let o_buffer_size = function
 let sub len max = max - len
 let option_map f = function Some x -> Some (f x) | None -> None
 
-let generate :
-    type fi fo s e.
+let generate : type fi fo s e.
        cfg
     -> s scheduler
     -> (fi, bytes, s, e) input
