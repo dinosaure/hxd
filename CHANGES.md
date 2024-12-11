@@ -1,3 +1,9 @@
+v0.3.3 2024-12-11 Paris (France)
+--------------------------------
+
+* Fix the usage of formatters to be composable with `fmt` (@dinosaure, #14)
+* Update the codebase with `ocamlformat.0.27.0` (@dinosaure, #14)
+
 v0.3.2 2022-02-28 Paris (France)
 --------------------------------
 
