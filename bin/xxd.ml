@@ -3,6 +3,7 @@ let invalid_arg fmt = Format.kasprintf invalid_arg fmt
 
 module Result = struct
   include Result
+
   let error_msgf fmt = Format.kasprintf (fun err -> Error (`Msg err)) fmt
 end
 
@@ -103,7 +104,20 @@ let do_cmd () cols groupsize long uppercase pixel seek ic oc =
 
 let do_fmt style_renderer =
   (* XXX(dinosaure): [fmt] hacks on tags to turn on colors. *)
-  Option.iter (Hxd.Fmt.set_style_renderer null) style_renderer
+  let style_renderer =
+    match style_renderer with
+    | Some `Ansi -> `Ansi
+    | Some `None -> `None
+    | None ->
+      let dumb =
+        match Sys.getenv_opt "TERM" with
+        | Some "dumb" | Some "" | None -> true
+        | _ -> false in
+      let isatty =
+        try Unix.(isatty (descr_of_out_channel Stdlib.stdout))
+        with Unix.Unix_error _ -> false in
+      if (not dumb) && isatty then `Ansi else `None in
+  Hxd.Fmt.set_style_renderer null style_renderer
 
 let string_for_all p str =
   let cursor = ref 0 in
@@ -281,15 +295,15 @@ let cmd =
   let info = Cmd.info "xxd" ~version:"%%VERSION%%" ~doc ~man in
   Cmd.v info
     Term.(
-    const do_cmd
-    $ setup_fmt
-    $ cols
-    $ groupsize
-    $ long
-    $ uppercase
-    $ pixel
-    $ seek
-    $ ic
-    $ oc)
+      const do_cmd
+      $ setup_fmt
+      $ cols
+      $ groupsize
+      $ long
+      $ uppercase
+      $ pixel
+      $ seek
+      $ ic
+      $ oc)
 
 let () = exit (Cmd.eval_result cmd)

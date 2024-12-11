@@ -56,7 +56,7 @@ let to_decdigit buffer off v =
   else (
     buffer.![off] <- Char.unsafe_chr (48 + v)
     ; succ off)
-  [@@inline]
+[@@inline]
 
 let ansi_style_code buffer off = function
   | `None ->
@@ -120,7 +120,8 @@ let ansi_style_code buffer off = function
     ; buffer.![off + 6] <- ';'
     ; let off = to_decdigit buffer (off + 7) color in
       (* TODO *)
-      buffer.![off] <- 'm' ; succ off
+      buffer.![off] <- 'm'
+      ; succ off
 
 let styled style pp ppf =
   match style_renderer ppf with

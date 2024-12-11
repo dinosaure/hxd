@@ -1,12 +1,9 @@
 #!/usr/bin/env ocaml
 
-;;
 #use "topfind"
 
-;;
 #require "fmt"
 
-;;
 #require "hxd.string"
 
 let text =

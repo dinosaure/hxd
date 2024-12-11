@@ -1,13 +1,12 @@
 (** HeXDump library for OCaml.
 
-    The library provides the most abstract way to serialize
-    something to a human-readable {i hexdump}. It allows the
-    transmission of binary data in a `mail-safe' ASCII
-    representation and it can handle colors if the given
+    The library provides the most abstract way to serialize something to a
+    human-readable {i hexdump}. It allows the transmission of binary data in a
+    `mail-safe' ASCII representation and it can handle colors if the given
     [Format.formatter] supports it.
 
-    It permits to serialize to a {i caml} value as a simple
-    list of [string]s or an array of [string]s. *)
+    It permits to serialize to a {i caml} value as a simple list of [string]s or
+    an array of [string]s. *)
 
 module Fmt : sig
   type standard =
@@ -24,15 +23,16 @@ module Fmt : sig
     ]
 
   val set_style_renderer : Format.formatter -> [ `Ansi | `None ] -> unit
-  (** [set_style_renderer ppf mode] sets the style renderer of [ppf] to [mode]. *)
+  (** [set_style_renderer ppf mode] sets the style renderer of [ppf] to [mode].
+  *)
 end
 
 type colorscheme
 (** The type of colorschemes. *)
 
 val colorscheme_of_array : Fmt.style array -> colorscheme
-(** [colorscheme_of_array arr] returns a {!colorscheme} from an array of 256 elements.
-    Otherwise, it returns an invalid argument. *)
+(** [colorscheme_of_array arr] returns a {!colorscheme} from an array of 256
+    elements. Otherwise, it returns an invalid argument. *)
 
 val lowercase : colorscheme -> Fmt.style -> unit
 (** [lowercase c style] sets lowercase ASCII values to the style [style]. *)
@@ -57,10 +57,10 @@ val xxd :
   -> colorscheme
   -> cfg
 (** [xxd ?cols ?groupsize ?long ?uppercase colorscheme] returns a configuration
-   which can be used by {!generate} then.
+    which can be used by {!generate} then.
     - [cols]: octets per line (default to 16)
-    - [groupsize]: Separate the output of every [groupsize] bytes
-      by a whitespace (default to 2).
+    - [groupsize]: Separate the output of every [groupsize] bytes by a
+      whitespace (default to 2).
     - [long]: stop after reading [len] octets.
     - [uppercase]: use upper case hex letters (default is lower case).
     - [colorscheme]: {!colorscheme} used if the given {!Format.formatter}
@@ -73,15 +73,14 @@ val caml :
   -> ?uppercase:bool
   -> [ `List | `Array ]
   -> cfg
-(** [caml ?with_comments ?cols ?long ?uppercase k] returns a configuration
-   which can be used by {!generate} then. It allows to produces a {i caml}
-   value from something.
+(** [caml ?with_comments ?cols ?long ?uppercase k] returns a configuration which
+    can be used by {!generate} then. It allows to produces a {i caml} value from
+    something.
     - [cols]: octets per line (default to 16)
-    - [with_comments]: add a comment which pretty-line the group
-      in a comment
+    - [with_comments]: add a comment which pretty-line the group in a comment
     - [long]: stop after reading [len] octets.
-    - [k]: if the user wants to produce a list of [string]s or
-      an array of [string]s. *)
+    - [k]: if the user wants to produce a list of [string]s or an array of
+      [string]s. *)
 
 val default : cfg
 (** A default [XXD] configuration. *)
@@ -125,18 +124,18 @@ val generate :
   -> Format.formatter
   -> ((unit, 'e) result, 's) io
 (** [generate cfg scheduler input output ic oc seek pos ppf] is the most
-   abstract way to produce an {i hex-dump} output. According to arguments,
-   we are able to read into [ic] and write into [oc] with respectively
-   [input] and [output].
+    abstract way to produce an {i hex-dump} output. According to arguments, we
+    are able to read into [ic] and write into [oc] with respectively [input] and
+    [output].
 
-    [seek] is used to manipulate the position in [ic] according to the
-   given position [pos].
+    [seek] is used to manipulate the position in [ic] according to the given
+    position [pos].
 
-    [ppf] is used to know if we support colors or not. [generate] writes on
-   it too and it takes care about {i pretty-printing boxes}.
+    [ppf] is used to know if we support colors or not. [generate] writes on it
+    too and it takes care about {i pretty-printing boxes}.
 
-    [scheduler] depends on which scheduler you use. You need to create one
-   over {i monads}:
+    [scheduler] depends on which scheduler you use. You need to create one over
+    {i monads}:
 
     {[
       module Unix_scheduler = Hxd.Make(struct type 'a t = 'a end)
@@ -152,16 +151,16 @@ val generate :
     You can abstract LWT {i monads} too:
 
     {[
-      module Lwt_scheduler = Hxd.Make(struct type 'a t = 'a Lwt.t end)
+      module Lwt_scheduler = Hxd.Make (struct type 'a t = 'a Lwt.t end)
 
       let lwt_scheduler =
         let open Lwt.Infix in
         let open Lwt_scheduler in
-        { Hxd.bind= (fun f x -> inj (prj x >>= fun x -> prj (f x)))
-        ; return= (fun x -> inj (Lwt.return x)) }
-
-      generate cfg lwt_scheduler
+        {
+          Hxd.bind= (fun f x -> inj (prj x >>= fun x -> prj (f x)))
+        ; return= (fun x -> inj (Lwt.return x))
+        }
+          generate cfg lwt_scheduler
     ]}
 
-    Such layers exist with [hxd.unix] and [hxd.lwt].
-*)
+    Such layers exist with [hxd.unix] and [hxd.lwt]. *)

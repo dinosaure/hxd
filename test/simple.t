@@ -1,13 +1,13 @@
 Simple tests
-  $ echo -n "foo" | hxd.xxd
+  $ printf "foo" | hxd.xxd
   00000000: 666f 6f                                  foo
-  $ echo -n "aaaaaaaa" | hxd.xxd
+  $ printf "aaaaaaaa" | hxd.xxd
   00000000: 6161 6161 6161 6161                      aaaaaaaa
-  $ echo -n "abababab" | hxd.xxd
+  $ printf "abababab" | hxd.xxd
   00000000: 6162 6162 6162 6162                      abababab
-  $ echo -n "abababababababab" | hxd.xxd
+  $ printf "abababababababab" | hxd.xxd
   00000000: 6162 6162 6162 6162 6162 6162 6162 6162  abababababababab
-  $ echo -n "" | hxd.xxd
+  $ printf "" | hxd.xxd
   $ printf '\0' | hxd.xxd
   00000000: 00                                       .
   $ printf 'abababababababab\0' | hxd.xxd
@@ -23,7 +23,7 @@ Simple tests
   00000060: 2057 6f72 6c64 210a 4865 6c6c 6f20 576f   World!.Hello Wo
   00000070: 726c 6421 0a48 656c 6c6f 2057 6f72 6c64  rld!.Hello World
   00000080: 210a                                     !.
-  $ echo -n "Hello World!" > input
+  $ printf "Hello World!" > input
   $ hxd.xxd input
   00000000: 4865 6c6c 6f20 576f 726c 6421            Hello World!
   $ hxd.xxd zh.txt

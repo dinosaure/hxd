@@ -32,14 +32,14 @@ let recv ic buffer ~off ~len =
       let len'' = (min : int -> int -> int) len len' in
       Bytes.blit_string res off' buffer off len''
       ; (if len'' < len' then
-         (* XXX(dinosaure): deferred inputs. *)
-         let consumed = ref false in
-         ic.contents <-
-           (fun () ->
-             if !consumed then ic.contents ()
-             else (
-               consumed := true
-               ; Lwt.return (Some (res, off' + len'', len' - len'')))))
+           (* XXX(dinosaure): deferred inputs. *)
+           let consumed = ref false in
+           ic.contents <-
+             (fun () ->
+               if !consumed then ic.contents ()
+               else (
+                 consumed := true
+                 ; Lwt.return (Some (res, off' + len'', len' - len'')))))
       ; Lwt.return_ok len'' in
   Lwt_scheduler.inj res
 
