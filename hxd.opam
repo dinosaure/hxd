@@ -26,3 +26,4 @@ depends: [
 depopts: [
   "lwt"
 ]
+x-maintenance-intent: [ "(latest)" ]
