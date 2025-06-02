@@ -1,2 +1,5 @@
 (cram
+ (enabled_if
+  (= %{ocaml-config:word_size} 64))
+ ; the only way to avoid tests on x86_32/arm32 which uses the bytecode compiler
  (deps zh.txt %{bin:hxd.xxd} %{bin:hxd.caml}))

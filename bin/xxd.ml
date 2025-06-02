@@ -72,15 +72,7 @@ let pixzen =
          `Style (`Bg, `bit24 (v lsr 16, (v lsr 8) land 0xff, v land 0xff)))
        pixzen)
 
-let null =
-  Format.formatter_of_out_functions
-    {
-      Format.out_string= (fun _ _ _ -> ())
-    ; out_flush= (fun () -> ())
-    ; out_newline= (fun () -> ())
-    ; out_spaces= (fun _ -> ())
-    ; out_indent= (fun _ -> ())
-    }
+let null = Format.make_formatter (fun _ _ _ -> ()) (fun _ -> ())
 
 let do_cmd () cols groupsize long uppercase pixel seek ic oc =
   let ic, ic_close =

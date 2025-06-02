@@ -46,14 +46,5 @@ let generate configuration str seek ppf =
   | Ok () -> Ok (Buffer.contents oc)
   | Error Seek -> Error (`Msg "Index out of bounds")
 
-let null =
-  Format.formatter_of_out_functions
-    {
-      Format.out_string= (fun _ _ _ -> ())
-    ; out_flush= (fun () -> ())
-    ; out_newline= (fun () -> ())
-    ; out_spaces= (fun _ -> ())
-    ; out_indent= (fun _ -> ())
-    }
-
+let null = Format.make_formatter (fun _ _ _ -> ()) (fun _ -> ())
 let to_hxd configuration str seek = generate configuration str seek null
