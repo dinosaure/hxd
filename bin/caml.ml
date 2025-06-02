@@ -7,15 +7,7 @@ module Result = struct
   let error_msgf fmt = Format.kasprintf (fun err -> Error (`Msg err)) fmt
 end
 
-let null =
-  Format.formatter_of_out_functions
-    {
-      Format.out_string= (fun _ _ _ -> ())
-    ; out_flush= (fun () -> ())
-    ; out_newline= (fun () -> ())
-    ; out_spaces= (fun _ -> ())
-    ; out_indent= (fun _ -> ())
-    }
+let null = Format.make_formatter (fun _ _ _ -> ()) (fun _ -> ())
 
 let do_cmd cols long uppercase kind with_comments seek ic oc =
   let ic, ic_close =
