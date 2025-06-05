@@ -1,3 +1,9 @@
+v0.3.4 2025-06-02 Paris (France)
+--------------------------------
+
+* Add `x-maintenance-intent` into the OPAM file (@hannesm, #16)
+* Be compatible with OCaml 5.04 (alpha1) (@dinosaure, #17)
+
 v0.3.3 2024-12-11 Paris (France)
 --------------------------------
 
