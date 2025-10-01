@@ -271,8 +271,8 @@ let style_renderer ?env () =
   Arg.(value & opt color None & info ["color"] ?env ~doc ~docv:"<when>")
 
 let setup_fmt =
-  let env = Cmd.Env.info "HXD_COLOR" in
-  Term.(const do_fmt $ style_renderer ~env ())
+  let hxd_color = Cmd.Env.info "HXD_COLOR" in
+  Term.(const do_fmt $ style_renderer ~env:hxd_color ())
 
 let cmd =
   let doc = "Make a hexdump." in
