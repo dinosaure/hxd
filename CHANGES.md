@@ -1,3 +1,8 @@
+v0.3.5 2025-10-01 Paris (France)
+--------------------------------
+
+* Fix the compilation with `cmdliner.2.0.0` (@dinosaure, #19)
+
 v0.3.4 2025-06-02 Paris (France)
 --------------------------------
 
