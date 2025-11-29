@@ -1,3 +1,10 @@
+v0.3.6 2025-11-29 Paris (France)
+--------------------------------
+
+* Fix the `caml` support (@dinosaure, #21)
+  + Escape the character '"'
+  + Print out into `ppf` when we configure hxd with `caml`
+
 v0.3.5 2025-10-01 Paris (France)
 --------------------------------
 
