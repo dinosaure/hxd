@@ -81,8 +81,7 @@ let ansi_style_code buffer off = function
         buffer.![off] <- ';'
         ; let off = to_decdigit buffer (succ off) b in
           buffer.![off] <- 'm'
-          ; (* Format.eprintf ">> %S.\n%!" (Bytes.sub_string buffer anchor ((off + 1) - anchor)) ; *)
-            off + 1
+          ; off + 1
   | `Style (style, (#rest as color)) ->
     let color =
       match color with

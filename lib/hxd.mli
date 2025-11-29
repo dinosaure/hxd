@@ -93,9 +93,7 @@ type ('f, 'b, 's, 'e) input =
 type ('f, 'b, 's, 'e) output =
   'f -> 'b -> off:int -> len:int -> ((int, 'e) result, 's) io
 
-module Make (S : sig
-  type 'a t
-end) : sig
+module Make (S : sig type 'a t end) : sig
   type t
   type 'a s = 'a S.t
 
