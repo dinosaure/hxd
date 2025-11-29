@@ -120,3 +120,13 @@ Tests about caml outputs
   [| "\x66\x6f\x6f\x20\x26\x20\x62\x61\x72\x0a" |] (* foo & bar. *)
   $ echo "Hello World!"
   Hello World!
+  $ cat >fix.ml <<EOF
+  > let input =
+  > EOF
+  $ echo '"Hello World!"' | hxd.caml --with-comments -k array >> fix.ml
+  $ cat >>fix.ml <<EOF
+  > let () = Array.iter print_string input
+  > EOF
+  $ ocamlopt fix.ml
+  $ ./a.out
+  "Hello World!"
