@@ -247,7 +247,8 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
              ; off := !off + 3)
       ; if cfg.with_comments then
           off := with_comments cfg input src_off src_len output !off
-        ; Format.fprintf ppf "%s@," (Bytes.sub_string output anchor (!off - anchor))
+        ; Format.fprintf ppf "%s@,"
+            (Bytes.sub_string output anchor (!off - anchor))
         ; output.![!off] <- '\n'
         ; !off + 1
 
@@ -316,8 +317,7 @@ let flush : type fo s e.
     -> string
     -> len:int
     -> ((int, e) result, s) io =
- fun _ send oc str ~len ->
-   send oc str ~off:0 ~len
+ fun _ send oc str ~len -> send oc str ~off:0 ~len
 
 let flush_all : type fo s e.
        s scheduler

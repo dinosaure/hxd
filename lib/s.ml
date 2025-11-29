@@ -24,9 +24,7 @@ module Common = struct
   external prj : 'a -> 'b = "%identity"
 end
 
-module type FUNCTOR = sig
-  type 'a t
-end
+module type FUNCTOR = sig type 'a t end
 
 module Make (T : FUNCTOR) = struct
   type 'a s = 'a T.t
