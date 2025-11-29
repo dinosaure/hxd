@@ -93,6 +93,7 @@ let with_comments (cfg : caml) input src_off src_len output dst_off =
     let dst_off = ref (dst_off + 4) in
     while !cursor < src_len do
       (match input.[src_off + !cursor] with
+      | '"' -> output.![!dst_off] <- '.'
       | '\032' .. '\126' as chr -> output.![!dst_off] <- chr
       | _ -> output.![!dst_off] <- '.')
       ; incr dst_off ; incr cursor
@@ -246,6 +247,7 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
              ; off := !off + 3)
       ; if cfg.with_comments then
           off := with_comments cfg input src_off src_len output !off
+        ; Format.fprintf ppf "%s@," (Bytes.sub_string output anchor (!off - anchor))
         ; output.![!off] <- '\n'
         ; !off + 1
 
@@ -276,7 +278,7 @@ let caml ?(with_comments = false) ?(cols = 16) ?long ?(uppercase = false) kind =
   let o_buffer_size =
     match with_comments with
     | false -> o_buffer_size
-    | true -> o_buffer_size + 7 + cols in
+    | true -> o_buffer_size + 8 + cols in
   Caml
     {kind; with_comments; cols; long; i_buffer_size; o_buffer_size; uppercase}
 
@@ -314,7 +316,8 @@ let flush : type fo s e.
     -> string
     -> len:int
     -> ((int, e) result, s) io =
- fun _ send oc str ~len -> send oc str ~off:0 ~len
+ fun _ send oc str ~len ->
+   send oc str ~off:0 ~len
 
 let flush_all : type fo s e.
        s scheduler
