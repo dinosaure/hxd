@@ -82,6 +82,13 @@ val caml :
     - [k]: if the user wants to produce a list of [string]s or an array of
       [string]s. *)
 
+val caml_string : ?cols:int -> ?long:int -> ?uppercase:bool -> unit -> cfg
+(** [caml_string ?cols ?long ?uppercase ()] returns a configuration which can be
+    used by {!generate}. It produces a single {i caml} string from something.
+    - [cols]: octets per line (default to 16)
+    - [with_comments]: add a comment which pretty-line the group in a comment
+    - [long]: stop after reading [len] octets. *)
+
 val default : cfg
 (** A default [XXD] configuration. *)
 

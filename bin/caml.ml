@@ -22,7 +22,12 @@ let do_cmd cols long uppercase kind with_comments seek ic oc =
     | `File path ->
       let oc = open_out path in
       oc, fun () -> close_out oc in
-  let configuration = Hxd.caml ?cols ?long ~uppercase ~with_comments kind in
+  let configuration =
+    (* FIXME: no with_comments and kind=`String at the same time *)
+    match kind with
+    | (`List | `Array) as kind ->
+      Hxd.caml ?cols ?long ~uppercase ~with_comments kind
+    | `String -> Hxd.caml_string ?cols ?long ~uppercase () in
   let res = Hxd_unix.generate configuration ic oc seek null in
   ic_close ()
   ; oc_close ()
@@ -143,10 +148,12 @@ let number =
 let kind =
   let pp ppf = function
     | `List -> Format.pp_print_string ppf "list"
-    | `Array -> Format.pp_print_string ppf "array" in
+    | `Array -> Format.pp_print_string ppf "array"
+    | `String -> Format.pp_print_string ppf "string" in
   let parser = function
     | "list" -> Ok `List
     | "array" -> Ok `Array
+    | "string" -> Ok `String
     | x -> Result.error_msgf "Invalid <kind> value: %S" x in
   Arg.conv ~docv:"<kind>" (parser, pp)
 
@@ -195,7 +202,7 @@ let kind =
   in
   Arg.(
     value
-    & opt kind (`List : [ `List | `Array ])
+    & opt kind (`List : [ `List | `Array | `String ])
     & info ["k"; "kind"] ~doc ~docv:"<kind>")
 
 let cmd =
