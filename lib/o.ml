@@ -93,7 +93,7 @@ let with_comments (cfg : caml) input src_off src_len output dst_off =
     let dst_off = ref (dst_off + 4) in
     while !cursor < src_len do
       (match input.[src_off + !cursor] with
-      | '"' -> output.![!dst_off] <- '.'
+      | '"' | '*' | '\\' -> output.![!dst_off] <- '.'
       | '\032' .. '\126' as chr -> output.![!dst_off] <- chr
       | _ -> output.![!dst_off] <- '.')
       ; incr dst_off ; incr cursor
