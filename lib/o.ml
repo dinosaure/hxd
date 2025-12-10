@@ -195,6 +195,9 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
     if state land _begin <> 0 then (
       output.![!off] <- '"'
       ; incr off)
+    else (
+            output.![!off] <- ' '
+            ; incr off)
     ; for i = 0 to src_len - 1 do
         output.![!off] <- '\\'
         ; incr off
