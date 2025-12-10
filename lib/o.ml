@@ -196,8 +196,8 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
       output.![!off] <- '"'
       ; incr off)
     else (
-            output.![!off] <- ' '
-            ; incr off)
+      output.![!off] <- ' '
+      ; incr off)
     ; for i = 0 to src_len - 1 do
         output.![!off] <- '\\'
         ; incr off
@@ -212,8 +212,7 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
       else (
         output.![!off] <- '\\'
         ; incr off (* Not doing comments for now *))
-    ; Format.fprintf ppf "%s@,"
-        (Bytes.sub_string output anchor (!off - anchor))
+    ; Format.fprintf ppf "%s@," (Bytes.sub_string output anchor (!off - anchor))
     ; output.![!off] <- '\n'
     ; !off + 1
   | Caml ({kind= (`Array | `List) as kind; _} as cfg) ->
