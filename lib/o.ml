@@ -36,7 +36,7 @@ type xxd = {
 }
 
 type caml = {
-    kind: [ `List | `Array ]
+    kind: [ `List | `Array | `String ]
   ; with_comments: bool
   ; cols: int
   ; long: int option
@@ -189,11 +189,37 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
           (Bytes.sub_string output anchor (!off + src_len - anchor))
       ; output.![!off + src_len] <- '\n'
       ; !off + src_len + 1
-  | Caml cfg ->
+  | Caml ({kind= `String; _} as cfg) ->
+    let alphabet = if cfg.uppercase then a_uppercase else a_lowercase in
+    let off = ref dst_off in
+    if state land _begin <> 0 then (
+      output.![!off] <- '"'
+      ; incr off)
+    else (
+      output.![!off] <- ' '
+      ; incr off)
+    ; for i = 0 to src_len - 1 do
+        output.![!off] <- '\\'
+        ; incr off
+        ; output.![!off] <- 'x'
+        ; incr off
+        ; to_hexdigit alphabet '0' !off output 2 input.!{src_off + i}
+        ; off := !off + 2
+      done
+    ; if state land _end <> 0 then (
+        output.![!off] <- '"'
+        ; incr off)
+      else (
+        output.![!off] <- '\\'
+        ; incr off (* Not doing comments for now *))
+    ; Format.fprintf ppf "%s@," (Bytes.sub_string output anchor (!off - anchor))
+    ; output.![!off] <- '\n'
+    ; !off + 1
+  | Caml ({kind= (`Array | `List) as kind; _} as cfg) ->
     let alphabet = if cfg.uppercase then a_uppercase else a_lowercase in
     let off = ref dst_off in
     (if state land _begin <> 0 then (
-       match cfg.kind with
+       match kind with
        | `List ->
          output.![!off] <- '['
          ; incr off
@@ -202,7 +228,7 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
          ; output.![!off + 1] <- '|'
          ; off := !off + 2)
      else
-       match cfg.kind with
+       match kind with
        | `List ->
          output.![!off] <- ';'
          ; incr off
@@ -224,7 +250,7 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
       ; output.![!off] <- '"'
       ; incr off
       ; (if state land _end <> 0 then (
-           match cfg.kind with
+           match kind with
            | `List ->
              output.![!off] <- ' '
              ; output.![!off + 1] <- ']'
@@ -235,7 +261,7 @@ let to_line cfg ppf ~seek ?(state = 0) input ~src_off ~src_len output ~dst_off =
              ; output.![!off + 2] <- ']'
              ; off := !off + 3)
          else if cfg.with_comments then
-           match cfg.kind with
+           match kind with
            | `List ->
              output.![!off] <- ' '
              ; output.![!off + 1] <- ' '
@@ -274,6 +300,7 @@ let none = Array.make 256 `None
 let default = xxd none
 
 let caml ?(with_comments = false) ?(cols = 16) ?long ?(uppercase = false) kind =
+  let kind = (kind :> [ `List | `Array | `String ]) in
   let i_buffer_size = cols in
   let o_buffer_size = 3 + 1 + (cols * 4) + 1 + 3 in
   let o_buffer_size =
@@ -282,6 +309,9 @@ let caml ?(with_comments = false) ?(cols = 16) ?long ?(uppercase = false) kind =
     | true -> o_buffer_size + 8 + cols in
   Caml
     {kind; with_comments; cols; long; i_buffer_size; o_buffer_size; uppercase}
+
+let caml_string ?cols ?long ?uppercase () =
+  caml ~with_comments:false ?cols ?long ?uppercase `String
 
 let cols = function Xxd xxd -> xxd.cols | Caml caml -> caml.cols
 let long = function Xxd xxd -> xxd.long | Caml caml -> caml.long
