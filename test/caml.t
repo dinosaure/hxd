@@ -130,3 +130,10 @@ Tests about caml outputs
   $ ocamlopt fix.ml
   $ ./a.out
   "Hello World!"
+  $ printf "abababababababab" | hxd.caml --kind string
+  "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62"
+  $ printf "abababababababab\0" | hxd.caml --kind string
+  "\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\x61\x62\
+  \x00"
+  $ printf "aaaaaaaaa" | hxd.caml --kind string
+  "\x61\x61\x61\x61\x61\x61\x61\x61\x61"
