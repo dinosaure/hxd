@@ -1,3 +1,9 @@
+v0.4.0 2026-02-18 Paris (France)
+--------------------------------
+
+- Add a new kind when we output with `hxd.caml`: the string kind (@reynir, @dinosaure, #23)
+- Still escape few more characters when we print comments (@dinosaure, db68d47)
+
 v0.3.6 2025-11-29 Paris (France)
 --------------------------------
 
