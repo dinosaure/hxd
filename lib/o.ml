@@ -47,6 +47,10 @@ type caml = {
 
 type cfg = Xxd of xxd | Caml of caml
 
+let is_caml = function
+  | Caml { kind; _ } -> Some kind
+  | _ -> None
+
 let ( .!{} ) str pos = Char.code str.[pos]
 let ( .![]<- ) bytes pos chr = Bytes.set bytes pos chr
 

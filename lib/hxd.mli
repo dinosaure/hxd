@@ -92,6 +92,10 @@ val caml_string : ?cols:int -> ?long:int -> ?uppercase:bool -> unit -> cfg
 val default : cfg
 (** A default [XXD] configuration. *)
 
+val is_caml : cfg -> [ `List | `Array | `String ] option
+(** [is_caml cfg] returns the type of the content we will emit according to the
+    given [cfg]. It returns [None] if [cfg] comes from {!val:xxd}. *)
+
 type ('a, 's) io
 
 type ('f, 'b, 's, 'e) input =
