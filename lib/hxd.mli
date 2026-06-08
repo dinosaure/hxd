@@ -92,9 +92,17 @@ val caml_string : ?cols:int -> ?long:int -> ?uppercase:bool -> unit -> cfg
 val default : cfg
 (** A default [XXD] configuration. *)
 
+(** {2 Accessors.}
+
+    Few functions to introspect a {!type:cfg}. *)
+
 val is_caml : cfg -> [ `List | `Array | `String ] option
-(** [is_caml cfg] returns the type of the content we will emit according to the
-    given [cfg]. It returns [None] if [cfg] comes from {!val:xxd}. *)
+val input_buffer_size : cfg -> int
+val output_buffer_size : cfg -> int
+val with_uppercase : cfg -> bool
+val cols : cfg -> int
+
+(** {2 I/O.} *)
 
 type ('a, 's) io
 
@@ -120,6 +128,8 @@ type 's scheduler = {
 type ('f, 's, 'e) seek = {
     lseek: 'f -> int -> [ `SET | `CUR | `END ] -> ((int, 'e) result, 's) io
 }
+
+(** {2 First entry point.} *)
 
 val generate :
      cfg
