@@ -170,16 +170,16 @@ val generate :
     You can abstract LWT {i monads} too:
 
     {[
-      module Lwt_scheduler = Hxd.Make (struct type 'a t = 'a Lwt.t end)
+    module Lwt_scheduler = Hxd.Make (struct type 'a t = 'a Lwt.t end)
 
-      let lwt_scheduler =
-        let open Lwt.Infix in
-        let open Lwt_scheduler in
-        {
-          Hxd.bind= (fun f x -> inj (prj x >>= fun x -> prj (f x)))
-        ; return= (fun x -> inj (Lwt.return x))
-        }
-          generate cfg lwt_scheduler
+    let lwt_scheduler =
+      let open Lwt.Infix in
+      let open Lwt_scheduler in
+      {
+        Hxd.bind= (fun f x -> inj (prj x >>= fun x -> prj (f x)))
+      ; return= (fun x -> inj (Lwt.return x))
+      }
+        generate cfg lwt_scheduler
     ]}
 
     Such layers exist with [hxd.unix] and [hxd.lwt]. *)

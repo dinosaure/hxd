@@ -510,11 +510,15 @@ let generate : type fi fo s e.
       (Bytes.create io_buffer_size)
       0 (long cfg)
 
-let is_caml = function
-  | Caml { kind; _ } -> Some kind
-  | _ -> None
+let is_caml = function Caml {kind; _} -> Some kind | _ -> None
 
-let input_buffer_size = function Xxd { i_buffer_size; _ } | Caml { i_buffer_size; _ } -> i_buffer_size
-let output_buffer_size = function Xxd { o_buffer_size; _ } | Caml { o_buffer_size; _ } -> o_buffer_size
-let with_uppercase = function Xxd { uppercase; _ } | Caml { uppercase; _ } -> uppercase
-let cols = function Xxd { cols; _ } | Caml { cols; _ } -> cols
+let input_buffer_size = function
+  | Xxd {i_buffer_size; _} | Caml {i_buffer_size; _} -> i_buffer_size
+
+let output_buffer_size = function
+  | Xxd {o_buffer_size; _} | Caml {o_buffer_size; _} -> o_buffer_size
+
+let with_uppercase = function
+  | Xxd {uppercase; _} | Caml {uppercase; _} -> uppercase
+
+let cols = function Xxd {cols; _} | Caml {cols; _} -> cols
