@@ -1,3 +1,10 @@
+v0.5.0 2026-06-08 Paris (France)
+--------------------------------
+
+- Add `Hxd.is_caml`, `Hxd.{input,output}_buffer_size`, `Hxd.with_uppercase`
+  & `Hxd.cols` and be able to introspect a `cfg` value (@dinosaure, #25)
+- Apply `ocamlformat.0.29.0` (@dinosaure, #26)
+
 v0.4.0 2026-02-18 Paris (France)
 --------------------------------
 
