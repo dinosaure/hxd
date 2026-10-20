@@ -1,5 +1,15 @@
 (cram
+ (applies_to * \ lib)
  (enabled_if
   (= %{ocaml-config:word_size} 64))
  ; the only way to avoid tests on x86_32/arm32 which uses the bytecode compiler
  (deps zh.txt %{bin:hxd.xxd} %{bin:hxd.caml}))
+
+(cram
+ ; the lib.t test requires access to the hxd package libraries, but not the executables
+ (applies_to lib)
+ (enabled_if
+  (= %{ocaml-config:word_size} 64))
+ ; the only way to avoid tests on x86_32/arm32 which uses the bytecode compiler
+ (deps
+  (package hxd)))
